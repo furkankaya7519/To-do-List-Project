@@ -2,7 +2,9 @@
 const addButton = document.querySelector("#addButton");
 const removeAllButton = document.querySelector("#removeAllButton");
 const removeButton = document.querySelector("#removeButton");
+const editButton = document.querySelector("#editButton");
 const todoInput = document.querySelector("#todoInput");
+const searchInput = document.querySelector("#searchInput");
 const todoListGroup = document.querySelector("#todoListGroup");
 let todoArray = [];
 let todoList;
@@ -41,7 +43,54 @@ function addListeners(){
     addButton.addEventListener("click",addButtonListener);
     removeAllButton.addEventListener("click",removeAllButtonListener);
     removeButton.addEventListener("click",removeButtonListener);
+    editButton.addEventListener("click",editButtonListener);
+    searchInput.addEventListener("keyup",searcher);
+}
 
+
+function searcher(e){
+    
+    const searchValue = e.target.value.toLowerCase().trim();
+    const tdL = document.querySelectorAll(".tD");
+
+    if(tdL.length>0){
+        tdL.forEach(function(myTodo){
+
+            if(myTodo.textContent.toLowerCase().trim().includes(searchValue)){
+
+                myTodo.setAttribute("style","display : block");
+            }
+            else{
+                myTodo.setAttribute("style","display : none !important");
+            }
+        })
+    }
+}
+
+function editButtonListener(){
+    if(clickedEleman != -1){
+        
+        const feedBack = prompt("After making the change, click the 'OK' button to save.",todoArray[clickedEleman]);
+        resetBackColor();
+        
+        if(feedBack == null){
+            return;
+            clickedEleman = -1;
+        }
+        else if(feedBack === ""){
+            alert("Todo can't be empty.")
+        }
+        else{
+            todoList[clickedEleman].innerHTML = feedBack;
+            todoArray[clickedEleman] = feedBack;
+            localStorage.setItem("todoList", todoArray.toString());
+        }
+
+        clickedEleman = -1;
+    }
+    else{
+        alert("You have to select an item from the to-do list.");
+    }
 }
 
 function removeButtonListener(){
