@@ -1,10 +1,12 @@
 
 const addButton = document.querySelector("#addButton");
 const removeAllButton = document.querySelector("#removeAllButton");
+const removeButton = document.querySelector("#removeButton");
 const todoInput = document.querySelector("#todoInput");
 const todoListGroup = document.querySelector("#todoListGroup");
 let todoArray = [];
 let todoList;
+let clickedEleman = -1;
 
 
 
@@ -30,6 +32,7 @@ function showTodos(){
     }
     
     todoList = document.querySelectorAll(".tD");
+    
 }
 
 
@@ -37,9 +40,48 @@ function showTodos(){
 function addListeners(){
     addButton.addEventListener("click",addButtonListener);
     removeAllButton.addEventListener("click",removeAllButtonListener);
+    removeButton.addEventListener("click",removeButtonListener);
+
+}
+
+function removeButtonListener(){
+
+    if(clickedEleman != -1){
+        todoList[clickedEleman].remove();
+        todoList = document.querySelectorAll(".tD");
+        
+        todoArray.splice(clickedEleman,1);
+        localStorage.setItem("todoList", todoArray.toString());
+
+        clickedEleman = -1;
+    }
+    else{
+        alert("You have to select an item from the to-do list.");
+    }
 }
 
 
+function listElemanListener(){
+    resetBackColor();
+    this.style.backgroundColor = "aqua";
+
+    for (const iterator in todoList) {
+        
+        if(todoList[iterator] === this){
+            clickedEleman = iterator;
+        }
+    }
+
+
+    
+}
+
+
+function resetBackColor(){
+    for (const iterator of todoList) {
+        iterator.style.backgroundColor = "";
+    }
+}
 
 
 
@@ -47,7 +89,7 @@ function addListeners(){
 function removeAllButtonListener(){
     
     localStorage.removeItem("todoList");
-
+    todoArray = [];
     let myList = document.querySelectorAll(".tD");
     
     for (const m of myList) {
@@ -56,10 +98,6 @@ function removeAllButtonListener(){
 
     
 }
-
-
-
-
 
 
 
@@ -86,8 +124,11 @@ function addToDoElement(t,w){
     const listElement = document.createElement("li");
     listElement.className = "list-group-item list-group-item-action tD";
     listElement.innerHTML = t;
+    listElement.addEventListener("click",listElemanListener);
     todoListGroup.appendChild(listElement);
-    
+    todoList = document.querySelectorAll(".tD");
+    resetBackColor();
+    clickedEleman = -1;
     if(w === 1){
         todoArray.push(t);
     }
