@@ -83,11 +83,6 @@ function editButtonClick(e){
 
 }
 
-
-
-
-
-
 function removeButtonClick(){
 
     let whichIndex;
