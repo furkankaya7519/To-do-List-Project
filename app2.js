@@ -3,11 +3,35 @@ const todoInput = document.querySelector("#todoInput");
 const addButton = document.querySelector("#addButton");
 const ul = document.querySelector("#ul");
 const removeAllButton = document.querySelector("#removeAllButton");
+const searchInput = document.querySelector("#searchInput");
 let todoArray = [];
 let elementsGroup = [];
 
 openingPage();
 addListeners();
+
+
+
+
+function searcher(e){
+    
+    const searchValue = e.target.value.toLowerCase().trim();
+    const tdL = document.querySelectorAll(".tD");
+
+    if(tdL.length>0){
+        tdL.forEach(function(myTodo){
+
+            if(myTodo.textContent.toLowerCase().trim().includes(searchValue)){
+
+                myTodo.setAttribute("style","display : block");
+            }
+            else{
+                myTodo.setAttribute("style","display : none !important");
+            }
+        })
+    }
+}
+
 
 
 function openingPage() {
@@ -26,7 +50,43 @@ function addListeners() {
     todoInput.addEventListener("click", todoInputClick);
     addButton.addEventListener("click", addButtonClick);
     removeAllButton.addEventListener("click", removeAllButtonClick);
+    searchInput.addEventListener("keyup",searcher);
 }
+
+
+
+function editButtonClick(e){
+    let whichIndex;
+    for (const elm in elementsGroup) {
+        if(this === elementsGroup[elm][3]){
+            whichIndex = elm;
+        }
+    }
+
+    const feedBack = prompt("After making the change, click the 'OK' button to save.",todoArray[whichIndex]);
+    
+
+
+    if(feedBack == null){
+        return;
+    }
+    else if(feedBack === ""){
+        alert("Todo can't be empty.")
+    }
+    else{
+
+        todoArray[whichIndex] = feedBack;
+        localStorage.setItem("ToDoText", todoArray.toString());
+        elementsGroup[whichIndex][1].innerHTML = feedBack;
+    }
+
+
+}
+
+
+
+
+
 
 function removeButtonClick(){
 
@@ -111,7 +171,7 @@ function addElements(text) {
     ul.appendChild(div);
     eG.push(div);
     const li = document.createElement("li");
-    li.className = "list-group-item list-group-item-action custom-add-input f";
+    li.className = "list-group-item list-group-item-action custom-add-input f tD";
     li.innerHTML = text;
     div.appendChild(li);
     eG.push(li);
@@ -124,6 +184,7 @@ function addElements(text) {
     const editButton = document.createElement("button");
     editButton.className = "btn-outline-success border-0 bg-white f";
     editButton.innerHTML = "📏";
+    editButton.addEventListener("click",editButtonClick);
     div2.appendChild(editButton);
     eG.push(editButton);
     const removeButton = document.createElement("button");
@@ -152,39 +213,3 @@ function addElements(text) {
 
 
 
-
-/*
-
- <div class="custom-add">
-                <li class="list-group-item list-group-item-action custom-add-input">fewfew</li>
-                <div class="btn-group custom-add-button" role="group" aria-label="Basic example">
-                    <button class="btn-outline-success border-0 bg-white">📏</button>
-                    <button class="btn-outline-success border-0 bg-white">🗑</button>
-                </div>
-</div>
-
-            <div class="custom-add">
-                <li class="list-group-item list-group-item-action custom-add-input">fewfew</li>
-                <div class="btn-group custom-add-button" role="group" aria-label="Basic example">
-                    <button class="btn-outline-success border-0 bg-white">📏</button>
-                    <button class="btn-outline-success border-0 bg-white">🗑</button>
-                  </div>
-            </div>
-
-            <div class="custom-add">
-                <li class="list-group-item list-group-item-action custom-add-input">fewfew</li>
-                <div class="btn-group custom-add-button" role="group" aria-label="Basic example">
-                    <button class="btn-outline-success border-0 bg-white">📏</button>
-                    <button class="btn-outline-success border-0 bg-white">🗑</button>
-                  </div>
-            </div>
-
-            <div class="custom-add">
-                <li class="list-group-item list-group-item-action custom-add-input">fewfew</li>
-                <div class="btn-group custom-add-button" role="group" aria-label="Basic example">
-                    <button class="btn-outline-success border-0 bg-white">📏</button>
-                    <button class="btn-outline-success border-0 bg-white">🗑</button>
-                  </div>
-            </div>
-
-*/
