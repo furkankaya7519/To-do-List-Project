@@ -4,7 +4,7 @@ const addButton = document.querySelector("#addButton");
 const ul = document.querySelector("#ul");
 const removeAllButton = document.querySelector("#removeAllButton");
 let todoArray = [];
-
+let elementsGroup = [];
 
 openingPage();
 addListeners();
@@ -28,6 +28,36 @@ function addListeners() {
     removeAllButton.addEventListener("click", removeAllButtonClick);
 }
 
+function removeButtonClick(){
+
+    let whichIndex;
+    for (const elm in elementsGroup) {
+        if(this === elementsGroup[elm][4]){
+            whichIndex = elm;
+        }
+    }
+
+    
+    
+
+    elementsGroup[whichIndex][0].remove();
+    elementsGroup[whichIndex][1].remove();
+    elementsGroup[whichIndex][2].remove();
+    elementsGroup[whichIndex][3].remove();
+    elementsGroup[whichIndex][4].remove();
+    
+    if(todoArray.length === 1){
+        todoArray.length = 0;
+        localStorage.removeItem("ToDoText");
+        elementsGroup.length = 0;
+    }
+    else{
+        todoArray.splice(whichIndex,1);
+        localStorage.setItem("ToDoText",todoArray.toString());
+        elementsGroup.splice(whichIndex,1);
+    }
+}
+
 function removeAllButtonClick() {
     const removedElements = document.querySelectorAll(".f");
 
@@ -35,6 +65,7 @@ function removeAllButtonClick() {
         todoArray.length = 0;
         localStorage.removeItem("ToDoText");
         removeElements();
+        elementsGroup.length = 0;
     }
 
 }
@@ -74,26 +105,34 @@ function checkTodoInput() {
 }
 
 function addElements(text) {
+    let eG = [];
     const div = document.createElement("div");
     div.className = "custom-add f";
     ul.appendChild(div);
+    eG.push(div);
     const li = document.createElement("li");
     li.className = "list-group-item list-group-item-action custom-add-input f";
     li.innerHTML = text;
     div.appendChild(li);
+    eG.push(li);
     const div2 = document.createElement("div");
     div2.className = "btn-group custom-add-button f";
     div2.role = "group";
     div2.ariaLabel = "Basic example";
     div.appendChild(div2);
+    eG.push(div2);
     const editButton = document.createElement("button");
     editButton.className = "btn-outline-success border-0 bg-white f";
     editButton.innerHTML = "📏";
     div2.appendChild(editButton);
+    eG.push(editButton);
     const removeButton = document.createElement("button");
     removeButton.className = "btn-outline-success border-0 bg-white f";
     removeButton.innerHTML = "🗑";
+    removeButton.addEventListener("click",removeButtonClick);
     div2.appendChild(removeButton);
+    eG.push(removeButton);
+    elementsGroup.push(eG);
 }
 
 
