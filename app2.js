@@ -2,6 +2,7 @@
 const todoInput = document.querySelector("#todoInput");
 const addButton = document.querySelector("#addButton");
 const ul = document.querySelector("#ul");
+const removeAllButton = document.querySelector("#removeAllButton");
 let todoArray = [];
 
 
@@ -9,68 +10,88 @@ openingPage();
 addListeners();
 
 
-function openingPage(){
-    
-    if(localStorage.getItem("ToDoText") != null){
+function openingPage() {
+
+    if (localStorage.getItem("ToDoText") != null) {
         todoArray = localStorage.getItem("ToDoText").split(",");
 
         for (const todo of todoArray) {
             addElements(todo);
         }
     }
-    
+
 }
 
-function addListeners(){
-    todoInput.addEventListener("click",todoInputClick);
-    addButton.addEventListener("click",addButtonClick);
+function addListeners() {
+    todoInput.addEventListener("click", todoInputClick);
+    addButton.addEventListener("click", addButtonClick);
+    removeAllButton.addEventListener("click", removeAllButtonClick);
+}
+
+function removeAllButtonClick() {
+    const removedElements = document.querySelectorAll(".f");
+
+    if (removedElements.length != 0) {
+        todoArray.length = 0;
+        localStorage.removeItem("ToDoText");
+        removeElements();
+    }
+
 }
 
 
-function todoInputClick(){
+function removeElements() {
+    const removedElements = document.querySelectorAll(".f");
+    for (const r of removedElements) {
+        r.remove();
+    }
+}
+
+
+function todoInputClick() {
     todoInput.value = "";
 }
 
-function addButtonClick(){
+function addButtonClick() {
 
-    if(checkTodoInput()){
+    if (checkTodoInput()) {
         todoInput.value = "Todo can not be empty.";
         return;
     }
-    
+
     addElements(todoInput.value);
 
     todoArray.push(todoInput.value);
-    localStorage.setItem("ToDoText",todoArray.toString());
+    localStorage.setItem("ToDoText", todoArray.toString());
 }
 
-function checkTodoInput(){
+function checkTodoInput() {
 
-    if(todoInput.value.length === 0){
+    if (todoInput.value.length === 0) {
         return true;
     }
     return false;
 }
 
-function addElements(text){
+function addElements(text) {
     const div = document.createElement("div");
-    div.className = "custom-add";
+    div.className = "custom-add f";
     ul.appendChild(div);
     const li = document.createElement("li");
-    li.className = "list-group-item list-group-item-action custom-add-input";
+    li.className = "list-group-item list-group-item-action custom-add-input f";
     li.innerHTML = text;
     div.appendChild(li);
     const div2 = document.createElement("div");
-    div2.className = "btn-group custom-add-button";
+    div2.className = "btn-group custom-add-button f";
     div2.role = "group";
     div2.ariaLabel = "Basic example";
     div.appendChild(div2);
     const editButton = document.createElement("button");
-    editButton.className = "btn-outline-success border-0 bg-white";
+    editButton.className = "btn-outline-success border-0 bg-white f";
     editButton.innerHTML = "📏";
     div2.appendChild(editButton);
     const removeButton = document.createElement("button");
-    removeButton.className = "btn-outline-success border-0 bg-white";
+    removeButton.className = "btn-outline-success border-0 bg-white f";
     removeButton.innerHTML = "🗑";
     div2.appendChild(removeButton);
 }
